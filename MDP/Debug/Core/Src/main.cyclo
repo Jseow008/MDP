@@ -19,7 +19,7 @@
 ../Core/Src/main.c:822:6:deleteQueue	2
 ../Core/Src/main.c:835:6:StartDefaultTask	2
 ../Core/Src/main.c:860:6:showMsg	1
-../Core/Src/main.c:883:6:motors	53
-../Core/Src/main.c:1597:6:encoder	6
-../Core/Src/main.c:1679:6:gryo_task	1
-../Core/Src/main.c:1711:6:Error_Handler	1
+../Core/Src/main.c:883:6:motors	54
+../Core/Src/main.c:1612:6:encoder	6
+../Core/Src/main.c:1694:6:gryo_task	1
+../Core/Src/main.c:1726:6:Error_Handler	1

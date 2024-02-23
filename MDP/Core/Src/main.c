@@ -159,8 +159,8 @@ uint16_t pwmVal_servo = 148; // servo centre
 
 Queue q;
 
-int turn_angle_l = 120;	// gyro turn threshold for 90deg
-int turn_angle_r = 120;
+int turn_angle_l = 118;	// gyro turn threshold for 90deg
+int turn_angle_r = 118;
 
 
 // GGGGGGGGG
@@ -933,19 +933,24 @@ void motors(void *argument)
 	// msg[3] - Speed for turning
 
 	// Create instructions
+	uint8_t reset[] = {'z', '0', '0', '0'}; // Stop
 	uint8_t stop[] = {'k', '0', '0', '0'}; // Stop
 	//uint8_t F3[] = {'w', '1', '0', '0'}; // Move forward with speed level 3 and turn left with speed level 4
-	//uint8_t F4[] = {'w', '0', '0','0'}; // Move forward with speed level 3 and turn left with speed level 4
-	uint8_t F3[] = {'w', '5', 'a','7'}; // Move forward with speed level 3 and turn left with speed level 4
-	uint8_t F4[] = {'w', '5', 'a','8'}; // Move forward with speed level 3 and turn left with speed level 4
+	uint8_t up_right_90[] = {'w', '5', 'd','8'}; // Move forward with speed level 3 and turn left with speed level 4
+	uint8_t up_right_45[] = {'w', '5', 'd','5'}; // Move forward with speed level 3 and turn left with speed level 4
+	uint8_t up_left_90[] = {'w', '5', 'a','9'}; // Move forward with speed level 3 and turn left with speed level 4
+	uint8_t up_left_45[] = {'w', '5', 'a','5'}; // Move forward with speed level 3 and turn left with speed level 4
+	uint8_t up_max[] = {'w', '9', '0','0'}; // Move forward with speed level 3 and turn left with speed level 4
 
 	// Enqueue the instructions
-	enqueue(&q,stop);
-	enqueue(&q, F4);
-	enqueue(&q,stop);
-	enqueue(&q, F4);
-	//enqueue(&q, F5);
-	//enqueue(&q, F6);
+	enqueue(&q, reset);
+	enqueue(&q, up_right_90);
+	enqueue(&q, up_max);
+	enqueue(&q, up_left_45);
+	enqueue(&q, up_max);
+	enqueue(&q, up_right_45);
+	enqueue(&q, up_max);
+	enqueue(&q, up_right_45);
 
 	/* Infinite loop */
 	for (;;) {
@@ -1093,7 +1098,7 @@ void motors(void *argument)
 						osDelay(100);
 
 						// Target Angle Threshold: Prevent overshooting
-						turn_angle = 0.4 * turn_angle;
+						turn_angle = 0.525 * turn_angle;
 
 						// Set speed
 						pwmVal_motor = (int) ((fb_speed - 48) * 400);
@@ -1230,8 +1235,7 @@ void motors(void *argument)
 									eintegral += err;		// Integral error
 
 									// PID equation (opposite correction)
-									servo_val = (uint8_t) (pwmVal_servo
-											- kp * err - ki * eintegral);
+									servo_val = (uint8_t) (pwmVal_servo - kp * err - ki * eintegral);
 
 									// Set servo value
 									htim1.Instance->CCR4 = servo_val;// Turn servo to correct error
@@ -1318,9 +1322,9 @@ void motors(void *argument)
 				__HAL_TIM_SetCompare(&htim8, TIM_CHANNEL_1, pwmVal_motor);
 				__HAL_TIM_SetCompare(&htim8, TIM_CHANNEL_2, pwmVal_motor);
 
+				osDelay(1500);
 				gyroStart();					// Start Gyro Calibration
 
-				osDelay(100);				// Required Delay for calibration
 				osDelay((fb_speed - 48) * 50);	// Additional delay if required
 			}
 
@@ -1563,6 +1567,17 @@ void motors(void *argument)
 				HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
 
 				msg[0] = 'w';
+			}
+
+			else if (frontback == 'z') {
+				osDelay(100);
+				htim1.Instance->CCR4 = 198;
+				osDelay(1000);
+				htim1.Instance->CCR4 = 98;
+				osDelay(1000);
+				htim1.Instance->CCR4 = pwmVal_servo;
+				osDelay(500);
+				HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
 			}
 
 			osDelay(10);

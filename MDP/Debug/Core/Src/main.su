@@ -19,7 +19,7 @@
 ../Core/Src/main.c:822:6:deleteQueue	16	static
 ../Core/Src/main.c:835:6:StartDefaultTask	24	static
 ../Core/Src/main.c:860:6:showMsg	40	static
-../Core/Src/main.c:883:6:motors	144	static
-../Core/Src/main.c:1597:6:encoder	56	static
-../Core/Src/main.c:1679:6:gryo_task	40	static
-../Core/Src/main.c:1711:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:883:6:motors	160	static
+../Core/Src/main.c:1612:6:encoder	56	static
+../Core/Src/main.c:1694:6:gryo_task	40	static
+../Core/Src/main.c:1726:6:Error_Handler	4	static,ignoring_inline_asm
